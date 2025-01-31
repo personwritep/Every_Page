@@ -2,7 +2,7 @@
 // @name        Every Page
 // @namespace        http://tampermonkey.net/
 // @version        1.3
-// @description      「記事の編集・削除」のリストで「常設 styleタグ」を自動記入する
+// @description        「記事の編集・削除」のリストで「常設 styleタグ」を自動記入する
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventrylist*
 // @match        https://blog.ameba.jp/ucs/entry/srventryupdate*
@@ -14,7 +14,6 @@
 
 
 window.addEventListener('DOMContentLoaded', function(){ // CSSデザインを適用するためのスクリプト
-
     let style=
         '<style>'+
         '.include-ex-linkBtn, .save-browserPush, .save-hashtag-module, .adcrossBanner,'+
@@ -34,9 +33,9 @@ window.addEventListener('DOMContentLoaded', function(){ // CSSデザインを適
 
 
 
-window.addEventListener('load', function(){ // このスクリプトは孫ウインドウだけで働く
+window.addEventListener('load', function(){ // 孫ウインドウで働くスクリプト
     let body_id=document.body.getAttribute("id");
-    if(body_id=="entryCreate"){ // この項だけ孫ウインドウで働く
+    if(body_id=="entryCreate"){ // 孫ウインドウ
 
         select_e(close_w);
 
@@ -45,24 +44,24 @@ window.addEventListener('load', function(){ // このスクリプトは孫ウイ
             if(error_report==null){
                 if(window.opener){
                     report('gray');
-                    window.opener.close(); }} // エラー無い場合 grayを送信　親ウインドウを閉じる
+                    window.opener.close(); }} // エラー無い場合 grayを送信　子ウインドウを閉じる
             else{
                 if(window.opener){
                     report('red');
                     window.opener.location.reload();
-                }} // エラー報告のある場合は redを送信　親ウインドウを残す
+                }} // エラー報告のある場合は redを送信　子ウインドウを残す
             close_w(); }
 
         function close_w(){
             let close_button=document.querySelector('.entryComplete__close');
-            close_button.click(); } // 子ウインドウは常に閉じる
+            close_button.click(); } // 孫ウインドウは常に閉じる
 
         function report(color){
             window.opener.document.querySelector('html').style.color=color; }}});
 
 
 
-window.addEventListener('load', function(){ // このスクリプトは親ウインドウで働くメインスクリプト
+window.addEventListener('load', function(){ // 親ウインドウで働くメインスクリプト
     let entry_target=document.querySelectorAll('.entry-item .entry');
     let entry_id=document.querySelectorAll('input[name="entry_id"]');
     let publish_f=document.querySelectorAll('input[name="publish_flg"]');
@@ -127,10 +126,11 @@ window.addEventListener('load', function(){ // このスクリプトは親ウイ
 
 
     function edit_target(val,k){
-        // 以下の style_textを編集すると、書込まれる styleタグの内容を変更出来ます 🟠🟠🟠
+        // 以下の style_textを編集すると、書込まれる styleタグの内容を変更出来ます ⭕⭕⭕⭕⭕
         let style_text=
-            '@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css");';
-        let style_elem='<style class="asa">'+ style_text +'</style>';
+            '<style class="asa" type="text/css">'+
+            '@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"); '+
+            '</style>';
 
         let editor_flg=new_win[k].document.querySelector('input[name="editor_flg"]');
 
@@ -142,12 +142,12 @@ window.addEventListener('load', function(){ // このスクリプトは親ウイ
                 let iframe_body=iframe_doc.querySelector('body.cke_editable');
 
                 if(style_tag){
-                    new_win[k].close();
                     result_f[k]=2; // 無処理
                     list_bar[k].style.boxShadow='none';
-                    list_bar[k].style.backgroundColor='#e5f4f3'; } // タグが有れば子ウインドウを閉じ 背景 淡グリーン
+                    list_bar[k].style.backgroundColor='#e5f4f3';
+                    new_win[k].close(); } // タグが有れば子ウインドウを閉じ 背景 淡グリーン
                 else{
-                    iframe_body.insertAdjacentHTML('beforeend', style_elem); // styleタグ書込み
+                    iframe_body.insertAdjacentHTML('beforeend', style_text); // styleタグ書込み
                     twice(end_do,k); }}} // 書き込みして送信
 
         if(editor_flg.value=='1'){ // タグ編集エディタの文書の場合
@@ -161,7 +161,7 @@ window.addEventListener('load', function(){ // このスクリプトは親ウイ
                 list_bar[k].style.backgroundColor='#e5f4f3';
                 new_win[k].close(); } // タグが有れば子ウインドウを閉じ 背景 淡グリーン
             else{
-                tageditor_text.insertAdjacentHTML('beforeend', style_elem); // styleタグ書込み
+                tageditor_text.insertAdjacentHTML('beforeend', style_text); // styleタグ書込み
                 twice(end_do,k); }} // 書き込みして送信
 
 
@@ -179,11 +179,11 @@ window.addEventListener('load', function(){ // このスクリプトは親ウイ
             if(send_color=='gray'){
                 result_f[k]=4; // 正常終了の報告
                 list_bar[k].style.boxShadow='none';
-                list_bar[k].style.backgroundColor='#bae5ea'; } // 孫ウインドウが編集ウインドウを閉じたら　背景グリーン
+                list_bar[k].style.backgroundColor='#bae5ea'; } // 孫の正常終了で　背景グリーン
             if(send_color=='red'){
                 result_f[k]=5; // エラー終了の報告
                 list_bar[k].style.boxShadow='inset 0 0 0 2px red';
-                list_bar[k].style.backgroundColor='#ffffff'; }} // 孫ウインドウのエラー報告の場合は閉じず　背景　白 赤枠
+                list_bar[k].style.backgroundColor='#ffffff'; }} // 孫のエラー報告の場合は　背景白 赤枠
 
         function publish_do(val,k){
             let publish_b0=new_win[k].document.querySelector('button.js-submitButton[publishflg="0"]');
