@@ -1,13 +1,15 @@
 // ==UserScript==
-// @name         Every Page 🔲
-// @namespace  http://tampermonkey.net/
-// @version       1.3
-// @description  「記事の編集・削除」のリストで「常設 styleタグ」を自動記入する
+// @name        Every Page
+// @namespace        http://tampermonkey.net/
+// @version        1.3
+// @description      「記事の編集・削除」のリストで「常設 styleタグ」を自動記入する
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventrylist*
 // @match        https://blog.ameba.jp/ucs/entry/srventryupdate*
 // @run-at        document-start
-// @grant         none
+// @grant        none
+// @updateURL        https://github.com/personwritep/Every_Page/raw/main/Every_Page.user.js
+// @downloadURL        https://github.com/personwritep/Every_Page/raw/main/Every_Page.user.js
 // ==/UserScript==
 
 
