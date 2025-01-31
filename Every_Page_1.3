@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Every Page
 // @namespace        http://tampermonkey.net/
-// @version        1.3
+// @version        2.0
 // @description        「記事の編集・削除」のリストで「常設 styleタグ」を自動記入する
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventrylist*
